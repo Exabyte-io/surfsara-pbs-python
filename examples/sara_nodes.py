@@ -166,6 +166,21 @@ def parse_args(args):
             rlist.append(arg)
     return rlist
 
+def get_nodes(jobs):
+
+    p = PBSQuery.PBSQuery()
+    nodes = list()
+
+    for job in jobs:
+        exec_hosts = p.getjob(job, ['exec_host'])
+        if not exec_hosts or 'exec_host' not in exec_hosts:
+            continue
+        for exec_host in exec_hosts['exec_host'][0].split('+'):
+            hostname = exec_host.split('/')[0]
+            if hostname not in nodes:
+                nodes.append(hostname)
+    return nodes
+
 ## END functions for hostrange parsing
 ####
 
@@ -547,6 +562,7 @@ if __name__ == '__main__':
         epilog=HELP_EPILOG,
     )
     parser.add_argument('nodes', metavar='NODES', nargs='*', type=str)
+    parser.add_argument('-j', '--jobs', action='store_true', help='use job id\'s instead of nodenames')
     parser.add_argument('-v','--verbose', action='store_true', help='enables verbose mode')
     parser.add_argument('-n','--dry-run', action='store_true', help='enables dry-run mode')
     parser.add_argument('-q','--quiet', action='store_true', help='enables to supress all feedback')
@@ -572,7 +588,9 @@ if __name__ == '__main__':
     if ARGS_VERBOSE: 
         _print('func:__main__ checking type of operation', file=sys.stderr)
 
-    if args.nodes:
+    if args.nodes and args.jobs:
+        args.nodes = get_nodes(args.nodes)
+    elif args.nodes:
         args.nodes = parse_args(args.nodes)
 
     ## If offline, modify, clear, clear_note or ticket then initiate the SaraNodes class

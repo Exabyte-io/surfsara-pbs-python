@@ -305,7 +305,7 @@ def get_nodes( racknode=False, hosts=None ):
 
     p.new_data_structure()
 
-    attr = [ 'state', 'jobs', 'properties' ]
+    attr = [ 'state', 'jobs', 'properties', 'jobs' ]
 
     try:
         nodes = p.getnodes( attr )
@@ -425,7 +425,7 @@ def real_sort( inlist ):
 
     return [ item for index, item in decorated ]
 
-def print_table(properties=None):
+def print_table(properties=None, jobs=None):
     global START_RACK 
     global OPT_SKIP_EMPTY_RACKS
 
@@ -474,8 +474,22 @@ def print_table(properties=None):
                     continue
             try:
                 if properties and compare_lists(properties,nodes[ rack ][ node ]['properties']):
-                    if TERMINAL_COLOR:
+                    prop_color = True
+                else:
+                    prop_color = False
+
+                if jobs and compare_lists(jobs, nodes[ rack ][ node ]['jobs']):
+                    job_color = True
+                else:
+                    job_color = False
+
+                if prop_color or job_color:
+                    if TERMINAL_COLOR and prop_color and job_color:
                         _print(color.GREEN + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
+                    elif TERMINAL_COLOR and  prop_color:
+                        _print(color.BLUE + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
+                    elif TERMINAL_COLOR and  job_color:
+                        _print(color.YELLOW + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
                     else:
                         _print('M', end=' ')
                 else:
@@ -556,8 +570,15 @@ def print_table_summary():
         n = n + 1
         if not (n & 1):
             _print()
+ 
+    if TERMINAL_COLOR:
+        _print()
+        _print('Colors has been enabled for your terminal:')
+        _print(' - ' + color.YELLOW + 'Matched jobs' + color.END)
+        _print(' - ' + color.BLUE + 'Matched properties' + color.END)
+        _print(' - ' + color.GREEN + 'Matched jobs and properties' + color.END)
 
-def print_extended(hosts=None, properties=None):
+def print_extended(hosts=None, properties=None, jobs=None):
     global LENGTH_NODE
     global LENGTH_STATE 
     global EXTENDED_PATTERNS
@@ -568,9 +589,11 @@ def print_extended(hosts=None, properties=None):
 
     rows_str = list()
     ihosts = real_sort( ihosts )
-
     for node in ihosts:
         attr = nodes[ node ]
+
+        if jobs and not compare_lists(jobs, attr['jobs']):
+            continue
 
         if properties and not compare_lists(properties, attr['properties']):
             continue
@@ -596,13 +619,14 @@ if __name__ == '__main__':
     )
 
     parser.add_argument('nodes', metavar='NODES', nargs='*', type=str)
-    parser.add_argument( "-t", "--table", dest="table", action="store_true", help="Show an table", default=PRINT_TABLE )
-    parser.add_argument( "-l", "--list", dest="extended", action="store_true", help="Show node rows with state and jobinfo", default=PRINT_EXTENDED )
-    parser.add_argument( "-s", "--summary", dest="summary", action="store_true", help="Display a short summary", default=False )
-    parser.add_argument( "-a", "--all", dest="summary", action="store_true", help="Display a short summary" )
-    parser.add_argument( "-w", "--wide", dest="wide", action="store_true", help="Wide display for node status ( only when -t is used )" )
-    parser.add_argument( "-S", "--servername", dest="servername", help="Change the default servername", default=None )
-    parser.add_argument( "-p", "--properties", dest="properties", help="Show nodes with property, you can use more than 1 property by using , (this is always een and) ie. -p infiniband,mem64gb", default=None)
+    parser.add_argument("-t", "--table", dest="table", action="store_true", help="Show an table", default=PRINT_TABLE )
+    parser.add_argument("-l", "--list", dest="extended", action="store_true", help="Show node rows with state and jobinfo", default=PRINT_EXTENDED )
+    parser.add_argument("-s", "--summary", dest="summary", action="store_true", help="Display a short summary", default=False )
+    parser.add_argument("-a", "--all", dest="summary", action="store_true", help="Display a short summary" )
+    parser.add_argument("-w", "--wide", dest="wide", action="store_true", help="Wide display for node status ( only when -t is used )" )
+    parser.add_argument("-S", "--servername", dest="servername", help="Change the default servername", default=None )
+    parser.add_argument("-p", "--properties", dest="properties", help="Show nodes with property, you can use more than 1 property by using , (this is always een and) ie. -p infiniband,mem64gb", default=None)
+    parser.add_argument("-j", "--job", dest="jobs", help="Show which nodes are uses by a job", default=None)
     parser.add_argument('--version', action='version', version=pbs.version)
 
     args = parser.parse_args()
@@ -628,10 +652,13 @@ if __name__ == '__main__':
     if args.properties:
         args.properties = [ item.strip() for item in args.properties.split(',') ]
 
+    if args.jobs:
+        args.jobs = [ item.strip() for item in args.jobs.split(',') ]
+
     if args.extended:
-        print_extended(args.nodes, args.properties) 
+        print_extended(args.nodes, args.properties, args.jobs) 
     elif args.table:
-        print_table(args.properties)
+        print_table(args.properties, args.jobs)
     else:
         _print('Something is wrong, bye!', file=sys.stderr)
         sys.exit( -1 )
