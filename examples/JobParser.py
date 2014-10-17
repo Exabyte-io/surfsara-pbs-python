@@ -153,8 +153,12 @@ class JobParser(object):
             self.job_script = job_script.readlines()
 
     def read(self, filename):
-        with open(filename, 'r') as fi:
-            self.job_script = fi.readlines()
+        try:
+            with open(filename, 'r') as fi:
+                self.job_script = fi.readlines()
+        except IOError:
+            error_str = "Jobscript filename does not exists: %s" %(filename)
+            raise Exception(error_str)
 
     def __get_pbs_args(self):
         if not self.job_script:
@@ -242,7 +246,13 @@ class JobParser(object):
 
 if __name__ == '__main__':
     jp = JobParser()
-    jp.read(sys.argv[1])
+
+    try:
+        jp.read(sys.argv[1])
+    except IndexError:
+        print("Usage: %s <jobscript>" %(sys.argv[0]))
+        sys.exit(1)
+        
 
     server_name = pbs.pbs_default()
     con = pbs.pbs_connect(server_name)

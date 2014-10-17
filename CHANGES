@@ -1,3 +1,11 @@
+=========== 4.5.0
+ * new_rack_pbsmon.py: Added option -j/--joby. It will show the nodes that are used by the specified job
+ Author: Dennis Stam
+
+ * JobscriptParser.py: Added a new usefull script which parses the jobscript and returns the attropl as datastructure
+ Author: Dennis Stam
+  
+
 =========== 4.4.1
  * new_rack_pbsmon.py: Added option -p/--property to filter on torque node properties. It will show
    the nodes that meet the property request with a capital M on a non-color terminal and in green on
