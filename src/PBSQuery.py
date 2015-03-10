@@ -1,5 +1,5 @@
 #
-# Authors: Roy Dragseth (roy.dragseth@cc.uit.no) 
+# Authors: Roy Dragseth (roy.dragseth@cc.uit.no)
 #          Bas van der Vlies (basv@sara.nl)
 #
 # SVN INFO:
@@ -13,20 +13,20 @@ for the several batch objects. All get..() functions return an dictionary
 with id as key and batch object as value
 
 There are four batch objects:
- - server 
+ - server
  - queue
  - job
  - node
 
 Each object can be handled as an dictionary and has several member
-functions. The second parameter is an python list and can be used if you 
+functions. The second parameter is an python list and can be used if you
 are only interested in certain resources, see example
 
 There are the following functions for PBSQuery:
-  job - 
+  job -
     getjob(job_id, attributes=<default is all>)
     getjobs(attributes=<default is all>)
- 
+
   node -
     getnode(node_id, attributes=<default is all>)
     getnodes(attributes=<default is all>)
@@ -52,7 +52,7 @@ Here is an example how to use the module:
     for name,node in nodes.items():
            print node, node['state']
 
-The parameter 'attributes' is an python list of resources that 
+The parameter 'attributes' is an python list of resources that
 you are interested in, eg: only show state of nodes
         l = list()
     l.append('state')
@@ -65,11 +65,47 @@ import sys
 import re
 import types
 
+
+REG_SUBRANGE = re.compile(r'^\d+(-\d+)?$')
+"""
+>>> b='rectime=1424696750,macaddr=40:a8:f0:2f:17:f4,cpuclock=Fixed,varattr=,jobs=419[1].master(cput=236745,energy_used=0,mem=6562224kb,vmem=7391872kb,walltime=22647,session_id=15941) 446[1].master(cput=7385,energy_used=0,mem=202936kb,vmem=368184kb,walltime=7391,session_id=30940) 446[2].master(cput=7385,energy_used=0,mem=204016kb,vmem=368184kb,walltime=7387,session_id=31168) 446[3].master(cput=7384,energy_used=0,mem=202380kb,vmem=368184kb,walltime=7387,session_id=31344) 446[4].master(cput=7384,energy_used=0,mem=204108kb,vmem=368184kb,walltime=7386,session_id=31536) 446[5].master(cput=7384,energy_used=0,mem=203940kb,vmem=368184kb,walltime=7386,session_id=31718) 446[6].master(cput=7383,energy_used=0,mem=188720kb,vmem=352608kb,walltime=7386,session_id=31904),state=free,size=456341748kb:459945088kb,netload=587288451179,gres=,loadave=18.07,ncpus=24,physmem=65850220kb,availmem=77961112kb,totmem=86821736kb,idletime=13933,nusers=1,nsessions=7,sessions=31904 31718 31536 31344 31168 30940 15941,uname=Linux node24 3.10.0 #1 SMP Wed Feb 4 08:16:54 CET 2015 x86_64,opsys=linux'
+>>> c=','.join([x[1] for x in re.compile(r'((:?[^,(]+(?:\(.*?\))?))(?:,|$)').findall(b)])
+>>> c == b
+True
+
+"""
+REG_SPLIT_COMMA_BRACE = re.compile(r'((:?[^,(]+(?:\(.*?\))?))(?:,|$)')
+"""
+>>> d='jobs=419[1].master(cput=236745,energy_used=0,mem=6562224kb,vmem=7391872kb,walltime=22647,session_id=15941) 446[1].master(cput=7385,energy_used=0,mem=202936kb,vmem=368184kb,walltime=7391,session_id=30940) 446[2].master(cput=7385,energy_used=0,mem=204016kb,vmem=368184kb,walltime=7387,session_id=31168) 446[3].master(cput=7384,energy_used=0,mem=202380kb,vmem=368184kb,walltime=7387,session_id=31344) 446[4].master(cput=7384,energy_used=0,mem=204108kb,vmem=368184kb,walltime=7386,session_id=31536) 446[5].master(cput=7384,energy_used=0,mem=203940kb,vmem=368184kb,walltime=7386,session_id=31718) 446[6].master(cput=7383,energy_used=0,mem=188720kb,vmem=352608kb,walltime=7386,session_id=31904)'
+>>> e='='.join([x[1] for x in re.compile(r'((:?[^=(]+(?:\(.*?\))?))(?:=|$)').findall(d)])
+>>> d == e
+True
+"""
+REG_SPLIT_EQUAL_BRACE = re.compile(r'((:?[^=(]+(?:\(.*?\))?))(?:=|$)')
+
+JOB_RE = re.compile('(?:^|,)(?:((?:[\d,-]+)?\d+)/)?(.+)')
+
+
+def convert_range(rangetxt):
+    """
+    Convert range string into list of id strings: eg.g '3,5,7-9' -> ['3','5','7','8','9']
+    """
+    ids=[]
+    for subrange in [r.split('-') for r in rangetxt.split(',')]:
+        start = int(subrange[0])
+        if(len(subrange) == 2 ):
+            end = int(subrange[1]) + 1
+        else:
+            end = start + 1
+        ids.extend([str(i) for i in range(start,end)])
+    return ids
+
+
 class PBSError(Exception):
     def __init__(self, msg=''):
         self.msg = msg
         Exception.__init__(self, msg)
-        
+
     def __repr__(self):
         return self.msg
 
@@ -92,7 +128,7 @@ class PBSQuery:
         ## this is needed for getjob a jobid is made off:
         #    sequence_number.server (is not self.server)
         #
-        self.job_server_id = list(self.get_serverinfo())[0] 
+        self.job_server_id = list(self.get_serverinfo())[0]
         self._disconnect()
 
 
@@ -111,7 +147,7 @@ class PBSQuery:
     def _list_2_attrib(self, list):
         """Convert a python list to an attrib list suitable for pbs"""
         self.attribs = pbs.new_attrl( len(list) )
-        i = 0 
+        i = 0
         for attrib in list:
             # So we can user Resource
             attrib = attrib.split('.')
@@ -126,9 +162,9 @@ class PBSQuery:
 
     def _list_2_dict(self, l, class_func):
         """
-        Convert a pbsstat function list to a class dictionary, The 
+        Convert a pbsstat function list to a class dictionary, The
         data structure depends on the function new_data_structure().
-        
+
         Default data structure is:
             class[key] = value, Where key and value are of type string
 
@@ -138,7 +174,7 @@ class PBSQuery:
               2. a dictionary with as list of values of type string. If
                  values contain a '=' character
 
-          eg: 
+          eg:
                 print node['np']
                 >> [ '2' ]
 
@@ -149,8 +185,8 @@ class PBSQuery:
         for item in l:
             new = class_func()
 
-            self.d[item.name] = new 
-            
+            self.d[item.name] = new
+
             new.name = item.name
 
             for a in item.attribs:
@@ -165,20 +201,20 @@ class PBSQuery:
                     new[key] = a.value
 
                 else:
-                    values = string.split(a.value, ',') 
-                    sub_dict = string.split(a.value, '=')
+                    # Don't split , between ()
+                    values = [x[1] for x in REG_SPLIT_COMMA_BRACE.findall(a.value)]
 
-
-                    # We must creat sub dicts, only for specified 
+                    # We must creat sub dicts, only for specified
                     # key values
                     #
                     if a.name in ['status', 'Variable_List']:
 
                         for v in values:
 
-                            tmp_l = v.split('=')
+                            # Don't split between ()
+                            tmp_l = [x[1] for x in REG_SPLIT_EQUAL_BRACE.findall(v)]
 
-                            ## Support for multiple EVENT mesages in format [key=value:]+ 
+                            ## Support for multiple EVENT mesages in format [key=value:]+
                             #  format eg: message=EVENT:sample.time=1288864220.003,EVENT:kernel=upgrade,cputotals.user=0
                             #             message=ERROR <text>
                             #
@@ -200,7 +236,7 @@ class PBSQuery:
                                     #
                                     new['error'] = tmp_l [1:]
 
-                            elif tmp_l[0].startswith('EVENT:'): 
+                            elif tmp_l[0].startswith('EVENT:'):
 
                                   message_list = v.split(':')
                                   for event_type in message_list[1:]:
@@ -212,15 +248,15 @@ class PBSQuery:
                                   #
                                   if new.has_key(a.name):
 
-                                      new[a.name][ tmp_l[0] ] = tmp_l[1:] 
+                                      new[a.name][ tmp_l[0] ] = tmp_l[1:]
 
                                   else:
 
                                       tmp_d  = dict()
                                       tmp_d[ tmp_l[0] ] = tmp_l[1:]
-                                      new[a.name] = class_func(tmp_d) 
+                                      new[a.name] = class_func(tmp_d)
 
-                    else: 
+                    else:
 
                         ## Check if it is a resource type variable, eg:
                         #  - Resource_List.(nodes, walltime, ..)
@@ -233,14 +269,14 @@ class PBSQuery:
                             else:
                                 tmp_d = dict()
                                 tmp_d[a.resource] = values
-                                new[a.name] = class_func(tmp_d) 
+                                new[a.name] = class_func(tmp_d)
                         else:
                             # Simple value
                             #
                             new[a.name] = values
 
         self._free(l)
-            
+
     def _free(self, memory):
         """
         freeing up used memmory
@@ -253,12 +289,12 @@ class PBSQuery:
         if attrib_list:
             self._list_2_attrib(attrib_list)
         else:
-            self.attribs = 'NULL' 
-            
+            self.attribs = 'NULL'
+
         self._connect()
         serverinfo = pbs.pbs_statserver(self.con, self.attribs, 'NULL')
-        self._disconnect() 
-        
+        self._disconnect()
+
         self._list_2_dict(serverinfo, server)
 
     def get_serverinfo(self, attrib_list=None):
@@ -270,12 +306,12 @@ class PBSQuery:
         if attrib_list:
             self._list_2_attrib(attrib_list)
         else:
-            self.attribs = 'NULL' 
-            
+            self.attribs = 'NULL'
+
         self._connect()
         queues = pbs.pbs_statque(self.con, queue_name, self.attribs, 'NULL')
-        self._disconnect() 
-        
+        self._disconnect()
+
         self._list_2_dict(queues, queue)
 
     def getqueue(self, name, attrib_list=None):
@@ -284,7 +320,7 @@ class PBSQuery:
             return self.d[name]
         except KeyError, detail:
             return self.d
-        
+
     def getqueues(self, attrib_list=None):
         self._statqueue('', attrib_list)
         return self.d
@@ -294,15 +330,15 @@ class PBSQuery:
         if attrib_list:
             self._list_2_attrib(attrib_list)
         else:
-            self.attribs = 'NULL' 
-            
+            self.attribs = 'NULL'
+
         if property:
             select = ':%s' %(property)
 
         self._connect()
         nodes = pbs.pbs_statnode(self.con, select, self.attribs, 'NULL')
-        self._disconnect() 
-        
+        self._disconnect()
+
         self._list_2_dict(nodes, node)
 
     def getnode(self, name, attrib_list=None):
@@ -311,7 +347,7 @@ class PBSQuery:
             return self.d[name]
         except KeyError, detail:
             return self.d
-        
+
     def getnodes(self, attrib_list=None):
         self._statnode('', attrib_list)
         return self.d
@@ -325,12 +361,12 @@ class PBSQuery:
         if attrib_list:
             self._list_2_attrib(attrib_list)
         else:
-            self.attribs = 'NULL' 
-            
+            self.attribs = 'NULL'
+
         self._connect()
         jobs = pbs.pbs_statjob(self.con, job_name, self.attribs, 'NULL')
-        self._disconnect() 
-        
+        self._disconnect()
+
         self._list_2_dict(jobs, job)
 
     def getjob(self, name, attrib_list=None):
@@ -345,7 +381,7 @@ class PBSQuery:
             return self.d[name]
         except KeyError, detail:
             return self.d
-        
+
     def getjobs(self, attrib_list=None):
         self._statjob('', attrib_list)
         return self.d
@@ -353,13 +389,13 @@ class PBSQuery:
     def get_server_name(self):
         return self.server
 
-    def new_data_structure(self): 
+    def new_data_structure(self):
         """
         Use the new data structure. Is now the default
         """
         self.OLD_DATA_STRUCTURE = False
 
-    def old_data_structure(self): 
+    def old_data_structure(self):
         """
         Use the old data structure. This function is obselete and
         will be removed in a future release
@@ -403,18 +439,6 @@ class _PBSobject(UserDict.UserDict):
             error = 'Attribute key error: %s' %(name)
             raise PBSError(error)
 
-    ## Disabled for this moment, BvdV 16 July 2010
-    #
-    #def __setattr__(self, name, value):
-    #   """
-    #   override the class attribute set method only when the UserDict
-    #   has set its class attribute
-    #   """
-    #   if self.__dict__.has_key('data'):
-    #       self.data[name] = value
-    #   else:
-    #       self.__dict__[name] = value
-
     def __iter__(self):
         return iter(self.data.keys())
 
@@ -436,15 +460,15 @@ class _PBSobject(UserDict.UserDict):
         if isinstance(self[key], types.ListType):
             return self[key][0]
         else:
-            return self[key] 
+            return self[key]
 
 class job(_PBSobject):
-    """PBS job class""" 
+    """PBS job class"""
     def is_running(self):
 
         value = self.return_value('job_state')
         if value == 'Q':
-            return self.TRUE 
+            return self.TRUE
         else:
             return self.FALSE
 
@@ -456,53 +480,46 @@ class job(_PBSobject):
           * split on '+' and if uniq is set split on '/'
         """
         nodes = self.get_value('exec_host')
-        
+        if not nodes:
+            return list()
+
         if isinstance(nodes, str):
-            if nodes:
-                nodelist = string.split(nodes,'+')
-                if not unique:
-                    return nodelist
-                else:
-                    l = list()
-
-                    for n in nodelist:
-                        t = string.split(n,'/')
-                        if t[0] not in l:
-                            l.append(t[0])
-
-                    return l
-
-            else:
-                return list()
+            nodelist = string.split(nodes,'+')
         else:
-                l = list()
-                for n in nodes:
+            nodelist = []
+            for n in nodes:
+                if REG_SUBRANGE.search(n):
+                    # This is a range split by _list_2_dict in a list
+                    # E.g. exec_host node1/4,5,8-9 is after _list_dict ['node1/4', '5', '8-9']
+                    # Re-join them with the last node
+                    nodelist[-1] += ',%s' % n
+                else:
+                    nodelist.extend(n.split('+'))
 
-                    nlist = string.split(n,'+')
+        res=[]
+        for n in nodelist:
+            t = string.split(n,'/')
 
-                    if unique:
-                        for entry in nlist:
+            if not unique:
+                res.extend(["%s/%s" % (t[0],i) for i in convert_range(t[1])])
+            else:
+                if t[0] not in res:
+                    res.append(t[0])
 
-                            t = string.split(entry,'/')
-                            if t[0] not in l:
-                                l.append(t[0])
-                    else:
-                        l += nlist
+        return res
 
-                return l
-        
 
 class node(_PBSobject):
     """PBS node class"""
-    
+
     def is_free(self):
         """Check if node is free"""
 
         value = self.return_value('state')
         if value == 'free':
             return self.TRUE
-        else: 
-            return self.FALSE 
+        else:
+            return self.FALSE
 
     def has_job(self):
         """Does the node run a job"""
@@ -511,35 +528,48 @@ class node(_PBSobject):
             return self.TRUE
         except KeyError, detail:
             return self.FALSE
-    
+
     def get_jobs(self, unique=None):
         """Returns a list of the currently running job-id('s) on the node"""
 
         jobs = self.get_value('jobs')
-        if jobs:    
-            if isinstance(jobs, str):
-                jlist = re.compile('[^\\ /]\\d+[^/.]').findall( jobs )
-            
-                if not unique:
-                    return jlist
-                else:
-                    return self.uniq(jlist)
+        if not jobs:
+            return list()
 
+        if isinstance(jobs, str):
+            jlist = re.compile('[^\\ /]\\d+[^/.]').findall( jobs )
+
+            if not unique:
+                return jlist
             else:
-                job_re = re.compile('^(?:\d+/)?(.+)')
-                l = list()
+                return self.uniq(jlist)
 
-                if unique:
-                        for j in jobs:
-                            jobstr = job_re.findall(j.strip())[0]
-                            if jobstr not in l: 
-                                l.append(jobstr)           
-
-                        return l
+        else:
+            # Support id ranges before job id
+            joblist = []
+            # Jobs might be splitted in ranges, but here _list_2_dict does
+            # 1,3,7-9/jobid -> ['1','3','7-9/jobid']
+            # Process in reverse order
+            for j in jobs[::-1]:
+                if REG_SUBRANGE.search(j):
+                    joblist[-1] = '%s,%s' % (j, joblist[-1])
                 else:
-                        return jobs
-
-        return list()
+                    joblist.append(j)
+            
+            # extend with nodes
+            l = []
+            
+            for j in joblist[::-1]:
+                r=JOB_RE.search(j)
+                # 1st match is range, second part is jobid
+                jobstr=r.groups()[1]
+                if unique:
+                    if jobstr not in l:
+                        l.append(jobstr)
+                else:
+                    l.extend(["%s/%s"%(i,jobstr) for i in convert_range(r.groups()[0])])
+                    
+            return l
 
 
 class queue(_PBSobject):
@@ -548,7 +578,7 @@ class queue(_PBSobject):
 
         value = self.return_value('enabled')
         if value == 'True':
-            return self.TRUE 
+            return self.TRUE
         else:
             return self.FALSE
 
@@ -556,7 +586,7 @@ class queue(_PBSobject):
 
         value = self.return_value('queue_type')
         if value == 'Execution':
-            return self.TRUE 
+            return self.TRUE
         else:
             return self.FALSE
 

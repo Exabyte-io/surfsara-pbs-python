@@ -14,7 +14,7 @@ instead of C.
 
 The Python wrapper class is tested on:
 
-  - LISA cluster debian wheezy, torque 2.5.7
+  - LISA cluster debian wheezy, torque 2.5.13
   - LTC test cluster debian wheezy, torque 5.0.1
   - LTC test cluster centos 6, torque 5.0.1
   - It should run on different OSes.

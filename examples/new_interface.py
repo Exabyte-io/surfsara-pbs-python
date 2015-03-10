@@ -31,7 +31,9 @@ def main():
   #print job.Variable_List.PBS_O_HOME
 
   l = ['np', 'state' ]
-  node = p.getnode("gb-r5n1", l)
+  node = p.getnode("r2n2", l)
+
+  print node.name
   print node.name, node['np']
 
   sys.exit(0)
