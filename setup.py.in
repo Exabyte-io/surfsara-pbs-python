@@ -50,7 +50,7 @@ if LooseVersion(VERSION) >= LooseVersion('5.0'):
     TORQUE_VERSION='TORQUE_5'
     SOURCE_FILE='src/5.x/pbs_wrap.cxx'
 
-    os.symlink('5.X/pbs.py', 'pbs.py')
+    os.symlink('5.x/pbs.py', 'pbs.py')
 
 if LooseVersion(VERSION) >= LooseVersion('4.2'):
 
