@@ -52,7 +52,7 @@ if LooseVersion(VERSION) >= LooseVersion('5.0'):
 
     os.symlink('5.x/pbs.py', 'pbs.py')
 
-if LooseVersion(VERSION) >= LooseVersion('4.2'):
+elif LooseVersion(VERSION) >= LooseVersion('4.2'):
 
     inc=os.environ.get('PBS_PYTHON_INCLUDEDIR','/usr/include/torque')
     os.environ['CC']='g++'
