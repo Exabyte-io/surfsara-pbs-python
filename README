@@ -14,24 +14,14 @@ instead of C.
 
 The Python wrapper class is tested on:
 
-  - Intel cluster debian GNU/LINUX woody/sarge OPENPBS 2.3.16, 
-    TORQUE 1.0.1p4, 1.1.0p4 and up
-
-  - For X86_64 systems you have to compile torque/openpbs with 
-    the -fPIC option. Else you can not build the python module
-
-  - TRU64 system, NOTE: must rename libnet.a to libpbs_net.a and 
-    edit setup.py to reflect the change. There is also a system wide 
-    libnet.so.
-
+  - LISA cluster debian wheezy, torque 2.5.7
+  - LTC test cluster debian wheezy, torque 5.0.1
+  - LTC test cluster centos 6, torque 5.0.1
   - It should run on different OSes.
-
-In the past our Alpha cluster was redhat (6.2)  and we had to 
-add '-lots' to the LIBS line
 
 -- Compile and install the package: (Require python 2.1 and higher)
 
-  As for python version 1.6 and higher the procedure is:
+  As for python version 2.1 and higher the procedure is:
     ./configure
     make
     make install
@@ -71,11 +61,6 @@ For more info about SARA see:
     http://www.surfsara.nl/index_eng.html
 
 --
-********************************************************************
-*                                                                  *
-*  Bas van der Vlies                     e-mail: basv@sara.nl      *
-*  SARA - Academic Computing Services    phone:  +31 20 592 8012   *
-*  Kruislaan 415                         fax:    +31 20 6683167    *
-*  1098 SJ Amsterdam                     WWW:    www.sara.nl       *
-*                                                                  *
-********************************************************************
+Bas van der Vlies
+| Operations, Support & Development | SURFsara | Science Park 140 | 1098 XG  Amsterdam
+| T +31 (0) 20 800 1300  | bas.vandervlies@surfsara.nl | www.surfsara.nl |

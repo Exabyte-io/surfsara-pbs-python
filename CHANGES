@@ -1,3 +1,7 @@
+=========== 4.6.0
+ * Added support for torque version 5.x. Note: the rm interface does not work for me on debian wheezy.
+   Author: Bas van der Vlies
+
 =========== 4.5.0
  * new_rack_pbsmon.py: Added option -j/--joby. It will show the nodes that are used by the specified job
  Author: Dennis Stam

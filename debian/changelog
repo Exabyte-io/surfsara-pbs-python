@@ -1,3 +1,9 @@
+pbs-python (4.6.0-1) UNRELEASED; urgency=low
+
+  * Added support torque 5.X
+
+ -- Bas van der Vlies <bas.vandervlies@surfsara.nl>  Tue, 10 Mar 2015 12:03:25 +0100
+
 pbs-python (4.4.1-1) unstable; urgency=low
 
   * See CHANGES
