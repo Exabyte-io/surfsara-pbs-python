@@ -3,11 +3,11 @@
    Author: Bas van der Vlies
 
  * PBSQuery had been update to new cpuid range for torque 5
-   Author: ?
+   Author: stijnd : deweirdt add ugent dot be 
    Applied by : Bas van der Vlies
 
 =========== 4.5.0
- * new_rack_pbsmon.py: Added option -j/--joby. It will show the nodes that are used by the specified job
+ * new_rack_pbsmon.py: Added option -j/--job. It will show the nodes that are used by the specified job
  Author: Dennis Stam
 
  * JobscriptParser.py: Added a new usefull script which parses the jobscript and returns the attropl as datastructure
