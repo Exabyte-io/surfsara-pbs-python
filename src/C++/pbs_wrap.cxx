@@ -3015,7 +3015,6 @@ struct attrl *new_attrl(int number)
     allocate memory as a one block is handy for Python scripts 
     and fill in the next fields so it also works for the C-library
   */
-  printf("basje \n");
   ptr = (struct attrl *) malloc(number * sizeof(struct attrl));
 
   prev = NULL;
