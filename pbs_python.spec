@@ -4,7 +4,7 @@
 
 Name: pbs_python
 Version: 4.6.0
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: See LICENSE
 Group: Development/Libraries
 Summary: This package contains the PBS python module.
@@ -17,8 +17,8 @@ Source: ftp://ftp.sara.nl/pub/outgoing/pbs_python.tar.gz
 
 ### Build Dependencies ###
 
-BuildRequires: libtorque-devel >= %{libtorque_version}
-BuildRequires: python2-devel >= %{python_version}
+BuildRequires: torque-devel
+BuildRequires: python-devel >= %{python_version}
 
 %description
 This package contains the pbs python module.
@@ -32,6 +32,9 @@ This package contains the pbs python module.
 
 %install
 %{__python} ./setup.py install --prefix $RPM_BUILD_ROOT%{_prefix} ;
+%{__mkdir_p} $RPM_BUILD_ROOT%{_prefix}/bin
+%{__install} -m0655 examples/sara_nodes.py ${RPM_BUILD_ROOT}%{_prefix}/bin/sara_nodes
+%{__install} -m0655 examples/new_rack_pbsmon.py ${RPM_BUILD_ROOT}%{_prefix}/bin/pbsmon
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -41,6 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README TODO examples
 %{python_sitearch}/pbs.pth
 %{python_sitearch}/pbs/*
+%{_prefix}/bin/*
 
 %changelog
 * Tue Mar 24 2010 Ramon Bastiaans <ramon.bastiaans@sara.nl>
