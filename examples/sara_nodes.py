@@ -248,12 +248,17 @@ def print_process_dict(dictin):
 
         ## Check if the given host has a note
         note = dictin[host]['note'] if dictin[host].has_key('note') else []
-        if note:
+        if len(note) > 3:
             add_dict['date_add']    = note[0]
             add_dict['date_edit']   = note[1]
             add_dict['username']    = note[2]
-            add_dict['ticket']      = note[3]
-            add_dict['note']        = ",".join(note[4:])
+
+            if note[3].isdigit():
+                add_dict['ticket']      = note[3]
+                add_dict['note']        = ",".join(note[4:])
+            else:
+                add_dict['ticket']      = ""
+                add_dict['note']        = ",".join(note[3:])
 
             ## Create an extra date field, combined for date_edit and date_add
             if add_dict['date_add'] and add_dict['date_edit']:
@@ -309,7 +314,7 @@ def print_overview_normal(hosts=None):
         if line['username'] and len(line['username']) > w_username:
             w_username = len(line['username'])
         if line['ticket'] and len(line['ticket']) > w_ticket:
-            w_ticket = len(line['ticket'])
+            w_ticket = len(line['ticket'].strip())
         if line['note'] and len(line['note']) > w_note:
             w_note = len(line['note'])
 
@@ -344,8 +349,10 @@ def print_overview_normal(hosts=None):
             show_line_fields.append([w_date_add,line['date_add']])
             show_line_fields.append([w_date_edit,line['date_edit']])
             show_line_fields.append([w_username,line['username']])
-            if w_ticket > 0:
-                show_line_fields.append([w_ticket,line['ticket']])
+            if w_ticket > 0 and line['ticket'].strip():
+                show_line_fields.append([w_ticket,'#' + line['ticket']])
+            else:
+                show_line_fields.append([w_ticket,''])
             show_line_fields.append([w_note,line['note']])
 
         _print(' %s' % ' | '.join(print_create_list(show_line_fields)))
@@ -401,10 +408,10 @@ class SaraNodes(object):
         '''Check if we already have a ticket number'''
         if ARGS_VERBOSE: 
             _print('class:SaraNodes func:_get_ticket input:%s' % prev_ticket, file=sys.stderr)
-        cur_ticket = '#%s' % self.ticket
+        cur_ticket = '%s' % self.ticket
         if prev_ticket and cur_ticket == prev_ticket:
             return prev_ticket
-        elif self.ticket and self.ticket.isdigit():
+        elif self.ticket:
             return cur_ticket
         elif self.ticket in ['c','clear','N',]:
             return ''
@@ -571,7 +578,7 @@ if __name__ == '__main__':
     parser.add_argument('-c','--clear', action='store_true', help='change the state to down')
     parser.add_argument('-N','--clear-note', action='store_true', help='clear the message of a node')
     parser.add_argument('-f','--format', metavar='FORMAT', help='change the output of sara_nodes (see footer of --help)')
-    parser.add_argument('-t','--ticket', metavar='TICKET', help='add a ticket number to a node')
+    parser.add_argument('-t','--ticket', metavar='TICKET', type=int, help='add a ticket number to a node')
     parser.add_argument('--version', action='version', version=pbs.version)
 
     ## Parse the arguments

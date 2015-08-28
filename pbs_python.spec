@@ -3,8 +3,8 @@
 ### Abstract ###
 
 Name: pbs_python
-Version: 4.6.0
-Release: 3%{?dist}
+Version: 4.6.1
+Release: 1%{?dist}
 License: See LICENSE
 Group: Development/Libraries
 Summary: This package contains the PBS python module.
