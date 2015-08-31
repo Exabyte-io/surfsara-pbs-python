@@ -2,9 +2,7 @@ PRODUCT=pbs_python
 VERSION=4.6.1
 RELEASE=1
 
-#PYTHON_VERSION=2.3
 PYTHON_VERSION=$(shell python -c "import re;import sys;print re.match('(?P<major>\d\.\d)',sys.version).group('major')")
-#LIBDIR=/usr/lib64
 LIBDIR=$(shell if [ `uname -p` = 'x86_64' ]; then echo /usr/lib64; else echo /usr/lib; fi)
 
 TAR=/bin/tar
