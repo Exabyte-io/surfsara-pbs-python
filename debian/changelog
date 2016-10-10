@@ -1,3 +1,9 @@
+pbs-python (4.6.2-1) UNRELEASED; urgency=low
+
+  * pbs_jobmonitor, remove newline printing after 7 node names for pbs_jobmonitor
+
+ -- Bas van der Vlies <bas.vandervlies@surfsara.nl>  Mon, 10 Oct 2016 15:24:03 +0200
+
 pbs-python (4.6.1-2) UNRELEASED; urgency=low
 
   [ Bas van der Vlies ]
