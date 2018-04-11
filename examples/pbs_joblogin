@@ -23,6 +23,7 @@
 #       logs in to the node as the user who invokes this script
 #            (os.getenv('USER'))
 #
+from __future__ import print_function
 from PBSQuery import PBSQuery
 import sys,os
 def uniq(seq, idfun=None): 
