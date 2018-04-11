@@ -14,7 +14,7 @@ def main():
 
   pbs_server = pbs.pbs_default()
   if not pbs_server:
-    print 'No default server'
+    print('No default server')
     sys.exit(1)
 
   con = pbs.pbs_connect(pbs_server)
@@ -24,8 +24,8 @@ def main():
 
   server_info = pbs.pbs_statserver(con, attr_l, 'NULL')
   for entry in server_info:
-    print entry.name
+    print(entry.name)
     for attrib in entry.attribs:
-       print '\t', attrib.name, ' = ', attrib.value
+       print('\t', attrib.name, ' = ', attrib.value)
 
 main()

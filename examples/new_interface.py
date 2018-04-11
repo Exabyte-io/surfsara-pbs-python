@@ -33,22 +33,22 @@ def main():
   l = ['np', 'state' ]
   node = p.getnode("r2n2", l)
 
-  print node.name
-  print node.name, node['np']
+  print(node.name)
+  print(node.name, node['np'])
 
   sys.exit(0)
 
   #nodes = p.getnodes(l)
   for id in nodes:
-	print id
+	print(id)
 
 	try:
-		print nodes[id].np
-		print nodes[id].status.arch
-		print nodes[id].status.uname
-		print nodes[id].state
+		print(nodes[id].np)
+		print(nodes[id].status.arch)
+		print(nodes[id].status.uname)
+		print(nodes[id].state)
 	except PBSError, detail:
-		print detail
+		print(detail)
 		pass
 	
      #for attrib in nodes[id]:

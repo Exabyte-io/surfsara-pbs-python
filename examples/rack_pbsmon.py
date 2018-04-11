@@ -43,13 +43,13 @@ def pbsmon():
 		pbs_server = pbs.pbs_default()
 
 	if not pbs_server:
-		print 'No default pbs server, usage: %s [server]' % os.path.basename(sys.argv[0])
+		print('No default pbs server, usage: %s [server]' % os.path.basename(sys.argv[0]))
 		sys.exit(1)
 
 	con = pbs.pbs_connect(pbs_server)
 	if con < 0:
 		errno, text = pbs.error()
-		print errno, text
+		print(errno, text)
 		sys.exit(1)
 
 # get the state of the nodes
@@ -85,31 +85,31 @@ def pbsmon():
 	legend.sort()
 
 # print nodes with gb-r%dn%d naming scheme
-	print '  ',
+	print('  ', end=' ')
 	for rack in xrange(1, N_RACKS+1):
-		print '%2d' % rack,
-	print
+		print('%2d' % rack, end=' ')
+	print()
 
 	for node_nr in xrange(1, NODES_PER_RACK+1):
-		print '%2d' % node_nr,
+		print('%2d' % node_nr, end=' ')
 
 		for rack in xrange(1, N_RACKS+1):
 			node_name = 'gb-r%dn%d' % (rack, node_nr)
 
 			if node_dict.has_key(node_name):
-				print ' %s' % node_dict[node_name],
+				print(' %s' % node_dict[node_name], end=' ')
 
 				del node_dict[node_name]
 			else:
-				print '  ',
+				print('  ', end=' ')
 
 		if node_nr-1 < len(legend):
 			state = legend[node_nr-1]
-			print '  %s  %-13s : %d' % (PBS_STATES[state], state, count_states[state])
+			print('  %s  %-13s : %d' % (PBS_STATES[state], state, count_states[state]))
 		else:
-			print
+			print()
 
-	print
+	print()
 
 # any other nodes?
 	arr = node_dict.keys()
@@ -117,9 +117,9 @@ def pbsmon():
 		arr.sort()
 
 		for node in arr:
-			print '%s %s' % (node, node_dict[node])
+			print('%s %s' % (node, node_dict[node]))
 
-		print
+		print()
 
 #	n = 0
 #	for state in legend:

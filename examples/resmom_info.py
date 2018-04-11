@@ -18,10 +18,10 @@ def main():
   nodes = pbs.pbs_statnode(c, '', 'NULL', 'NULL')
 
   for node in nodes:
-    print node.name, ' :'
+    print(node.name, ' :')
     attrs = node.attribs
     for attr in attrs:
-      print '\t%s = %s' %(attr.name, attr.value)
+      print('\t%s = %s' %(attr.name, attr.value))
 
     try:
       mom_port = socket.getservbyname('pbs_resmon', 'tcp')
@@ -32,15 +32,15 @@ def main():
 
     mom_keys = pbs.get_mom_values(mom_id)
     for key in mom_keys.keys():
-      print '\t%s = %s' %(key, mom_keys[key])
+      print('\t%s = %s' %(key, mom_keys[key]))
 
-    print '\nTesting list with user supplied keywords'
+    print('\nTesting list with user supplied keywords')
 
     l = [ 'bas', 'ncpus', 'loadave' ]
     mom_keys = pbs.get_mom_values(mom_id, l)
     for key in mom_keys.keys():
-      print '\t%s = %s' %(key, mom_keys[key])
-    print ''
+      print('\t%s = %s' %(key, mom_keys[key]))
+    print('')
     pbs.closerm(mom_id)
 
 

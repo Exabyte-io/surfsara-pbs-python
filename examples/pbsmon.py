@@ -62,15 +62,15 @@ def display_cluster_status(nl, sl):
 
   while start < items:
 
-    print ' ',
+    print(' ', end=' ')
     for j in range(start,end):
-      print format %(nl[j]) ,
+      print(format %(nl[j]), end=' ')
 
-    print '\n ',
+    print('\n ', end=' ')
     for j in range(start,end):
-      print format %(sl[j]) ,
+      print(format %(sl[j]), end=' ')
    
-    print '\n'
+    print('\n')
 
     start = end
     end = end + step 
@@ -83,9 +83,9 @@ def display_cluster_status(nl, sl):
   n = 0
   for key in translate_state.keys():
     value = translate_state[key]
-    print "%3s %-21s : %d\t |" %( value, key, sl.count(value) ),
+    print("%3s %-21s : %d\t |" %( value, key, sl.count(value) ), end=' ')
     if n%2:
-      print ''
+      print('')
     n = n + 1
 
 def main():
@@ -98,13 +98,13 @@ def main():
   else:
     pbs_server = pbs.pbs_default()
     if not pbs_server:
-      print "No default pbs server, usage: pbsmon [server] "
+      print("No default pbs server, usage: pbsmon [server] ")
       sys.exit(1)
 
   con = pbs.pbs_connect(pbs_server)
   if con < 0:
      errno, text = pbs.error()
-     print errno, text
+     print(errno, text)
      sys.exit(1)
 
   # We are only interested in the state and jobs of a node

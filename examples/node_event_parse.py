@@ -18,4 +18,4 @@ from PBSQuery import PBSQuery
 
 p = PBSQuery()
 node = p.getnode('gb-r7n3')
-print node['event']
+print(node['event'])

@@ -18,7 +18,7 @@ def main():
 
   pbs_server = pbs.pbs_default()
   if not pbs_server:
-    print "No default pbs server"
+    print("No default pbs server")
     sys.exit(1)
 
   con = pbs.pbs_connect(pbs_server)
@@ -26,8 +26,8 @@ def main():
 
 
   for node in nodes:
-    print node.name
+    print(node.name)
     for attrib in node.attribs:
-      print '\t', attrib.name, '=', attrib.value
+      print('\t', attrib.name, '=', attrib.value)
 
 main()

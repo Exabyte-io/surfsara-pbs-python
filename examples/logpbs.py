@@ -14,7 +14,7 @@ def main():
    # Open log in current directory with current date
    #
    if pbs.log_open('', '.'):
-     print 'Could not open log file'
+     print('Could not open log file')
      sys.exit(1)
 
    pbs.log_record(pbs.PBSEVENT_ERROR, pbs.PBS_EVENTCLASS_REQUEST, 'test1', 'this a test message')
@@ -26,7 +26,7 @@ def main():
    # Open the sched log file
    #
    if pbs.log_open('', '/var/spool/torque/sched_logs'):
-     print 'Could not open log file in /var/spool/torque/sched_logs'
+     print('Could not open log file in /var/spool/torque/sched_logs')
      sys.exit(1)
 
    pbs.log_record(pbs.PBSEVENT_JOB, pbs.PBS_EVENTCLASS_JOB, 'test1', 'this a test message')

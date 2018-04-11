@@ -15,11 +15,11 @@ import pbs
 def main():
   pbs_server = pbs.pbs_default()
   if not pbs_server:
-    print 'No default server'
+    print('No default server')
     sys.exit(1)
 
   if len(sys.argv) < 2:
-  	print "Usage: set_property.py <hostname>"
+  	print("Usage: set_property.py <hostname>")
 	sys.exit(1)
 
   hostname = sys.argv[1]
@@ -35,8 +35,8 @@ def main():
                     hostname, attrop_l, 'NULL')
 
   if r > 0:
-    print r, ";"
+    print(r, ";")
     errno, text = pbs.error() 
-    print errno, text
+    print(errno, text)
 
 main()

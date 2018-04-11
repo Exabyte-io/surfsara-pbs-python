@@ -250,7 +250,7 @@ if __name__ == '__main__':
     try:
         jp.read(sys.argv[1])
     except IndexError:
-        print("Usage: %s <jobscript>" %(sys.argv[0]))
+        print(("Usage: %s <jobscript>" %(sys.argv[0])))
         sys.exit(1)
         
 
@@ -260,6 +260,6 @@ if __name__ == '__main__':
 
     e, e_txt = pbs.error()
     if e:
-        print(e, e_txt)
+        print((e, e_txt))
     else:
         print(job_id)
