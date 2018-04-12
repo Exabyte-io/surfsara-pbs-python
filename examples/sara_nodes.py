@@ -7,6 +7,8 @@
 #   sara_nodes uses the module argparse
 
 ## The documenation, is shown when you type --help
+from __future__ import print_function
+
 HELP_DESCRIPTION = '''This program is a great example what you can achieve with the pbs_python wrapper. You can use sara_nodes to change the state of a machine to offline with a reason. Several information is stored in the nodes note attribute. Information such as; date added, date last change, the username, ticket number (handy when you wan't to reference to an issue in your tracking system) and the message.'''
 HELP_EPILOG = '''The format argument uses the Python string formatting. Fields that can be used are; nodename, state, date_add, date_edit, username, ticket and note. For example sara_nodes -f '%(nodename)s;%(state)s' '''
 
@@ -17,7 +19,6 @@ HOSTRANGE = r'\[([0-9az\-,]+)\]'
 ## Which states are allowed to show in the print_overview
 ALLOWED_STATES = set(['down', 'offline', 'unknown'])
 
-from __future__ import print_function
 import pbs
 import PBSQuery
 import re
