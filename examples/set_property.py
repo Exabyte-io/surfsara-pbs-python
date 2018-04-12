@@ -9,6 +9,7 @@
 #
 #
 #
+from __future__ import print_function
 import sys
 import pbs
 
@@ -19,8 +20,8 @@ def main():
     sys.exit(1)
 
   if len(sys.argv) < 2:
-  	print("Usage: set_property.py <hostname>")
-	sys.exit(1)
+    print("Usage: set_property.py <hostname>")
+    sys.exit(1)
 
   hostname = sys.argv[1]
 

@@ -9,7 +9,7 @@
 #
 #
 #
-
+from __future__ import print_function
 import pbs
 from PBSQuery import PBSQuery
 from PBSQuery import PBSError
@@ -40,18 +40,18 @@ def main():
 
   #nodes = p.getnodes(l)
   for id in nodes:
-	print(id)
+    print(id)
 
-	try:
-		print(nodes[id].np)
-		print(nodes[id].status.arch)
-		print(nodes[id].status.uname)
-		print(nodes[id].state)
-	except PBSError, detail:
-		print(detail)
-		pass
-	
+    try:
+        print(nodes[id].np)
+        print(nodes[id].status.arch)
+        print(nodes[id].status.uname)
+        print(nodes[id].state)
+    except PBSError, detail:
+        print(detail)
+        pass
+    
      #for attrib in nodes[id]:
-     #	print attrib, nodes[id][attrib]
+     #  print attrib, nodes[id][attrib]
 
 main()

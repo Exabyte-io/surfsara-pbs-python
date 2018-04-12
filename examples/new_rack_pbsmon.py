@@ -26,7 +26,7 @@ specifying hostnames:
 
 The ranges ([]) are not only limited to numbers, letters can also be used.
 """
-
+from __future__ import print_function
 import sys
 import re
 import re

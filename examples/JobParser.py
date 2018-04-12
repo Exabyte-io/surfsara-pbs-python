@@ -5,7 +5,7 @@
 # Description:  This is a very simple jobscript parser to fetch all #PBS arguments
 #               and convert them to a attropl list which can be used for submission
 #
-
+from __future__ import print_function
 import re
 import sys
 import argparse

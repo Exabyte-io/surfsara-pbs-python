@@ -17,6 +17,7 @@ HOSTRANGE = r'\[([0-9az\-,]+)\]'
 ## Which states are allowed to show in the print_overview
 ALLOWED_STATES = set(['down', 'offline', 'unknown'])
 
+from __future__ import print_function
 import pbs
 import PBSQuery
 import re
