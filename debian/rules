@@ -14,6 +14,7 @@ dh_configure::
 	./configure
 
 binary-post-install/pbs-python::
+	mv debian/pbs-python/usr/lib/python2.7/site-packages debian/pbs-python/usr/lib/python2.7/dist-packages
 	mkdir -p debian/pbs-python/usr/bin
 	install -D examples/new_rack_pbsmon.py debian/pbs-python/usr/bin/pbsmon
 	install -D examples/sara_nodes.py debian/pbs-python/usr/bin/sara_nodes
