@@ -108,34 +108,6 @@ if curses.tigetnum("colors") > 2:
 else:
     TERMINAL_COLOR=False
 
-####
-## Rewriting the print function, so it will work with all versions of Python
-def _print(*args, **kwargs):
-    '''A wrapper function to make the functionality for the print function the same for Python2.4 and higher'''
-    ## First try if we are running in Python3 and higher
-    try:
-        Print = eval('print')
-        Print(*args, **kwargs)
-    except SyntaxError:
-        ## Then Python2.6 and Python2.7
-        try:
-            D = dict()
-            exec('from __future__ import print_function\np=print', D)
-            D['p'](*args, **kwargs)
-            del D
-        ## Finally Python2.5 or lower
-        except SyntaxError:
-            del D
-            fout    = kwargs.get('file', sys.stdout)
-            write   = fout.write
-            if args:
-                write(str(args[0]))
-                sep = kwargs.get('sep', ' ')
-                for arg in args[1:]:
-                    write(sep)
-                    write(str(a))
-                write(kwargs.get('end', '\n'))
-
 class color:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
@@ -151,11 +123,11 @@ class color:
 def compare_lists(list_a, list_b):
     return not any(x not in list_b for x in list_a)
 
-## Import argparse here, as I need the _print function
+## Import argparse here, as I need the print function
 try:
     import argparse
 except ImportError:
-    _print('Cannot find argparse module', file=sys.stderr)
+    print('Cannot find argparse module', file=sys.stderr)
     sys.exit(1)
 
 ####
@@ -300,7 +272,7 @@ def get_nodes( racknode=False, hosts=None ):
         else:
             p = PBSQuery( OPT_SERVERNAME )
     except PBSError, reason:
-        _print('Error: %s' % reason)
+        print('Error: %s' % reason)
         sys.exit( -1 )
 
     p.new_data_structure()
@@ -310,7 +282,7 @@ def get_nodes( racknode=False, hosts=None ):
     try:
         nodes = p.getnodes( attr )
     except PBSError, reason:
-        _print('Error: %s' % reason)
+        print('Error: %s' % reason)
         sys.exit( -1 )
 
     number_of_racks = 0
@@ -434,8 +406,8 @@ def print_table(properties=None, jobs=None):
     ## Code herebelow has been taken from the new_rack_pbsmon.py
     save_column = None
     
-    _print()    
-    _print('  ', end=' ')
+    print()    
+    print('  ', end=' ')
     for rack in xrange( START_RACK, racknr + 1 ):
         
         if not ( rack % 10 ):
@@ -449,24 +421,24 @@ def print_table(properties=None, jobs=None):
                 if save_column:
                     char = save_column
                     save_column = None
-                _print(char, end=' ')
+                print(char, end=' ')
         else:
-            _print(char, end=' ')
-    _print()    
+            print(char, end=' ')
+    print()    
 
-    _print('  ', end=' ')
+    print('  ', end=' ')
     for rack in xrange( START_RACK, racknr + 1 ):
         
         char = rack % 10
         if OPT_SKIP_EMPTY_RACKS:
             if nodes.has_key( rack ):
-                _print(char, end=' ')
+                print(char, end=' ')
         else:
-            _print(char, end=' ')
-    _print()
+            print(char, end=' ')
+    print()
 
     for node in xrange( 1, nodenr + 1 ):
-        _print('%2d' % node, end=' ')
+        print('%2d' % node, end=' ')
 
         for rack in xrange( START_RACK, racknr + 1 ):
             if OPT_SKIP_EMPTY_RACKS:
@@ -485,19 +457,19 @@ def print_table(properties=None, jobs=None):
 
                 if prop_color or job_color:
                     if TERMINAL_COLOR and prop_color and job_color:
-                        _print(color.GREEN + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
+                        print(color.GREEN + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
                     elif TERMINAL_COLOR and  prop_color:
-                        _print(color.BLUE + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
+                        print(color.BLUE + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
                     elif TERMINAL_COLOR and  job_color:
-                        _print(color.YELLOW + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
+                        print(color.YELLOW + nodes[ rack ][ node ][ 'state_char' ] + color.END, end=' ')
                     else:
-                        _print('M', end=' ')
+                        print('M', end=' ')
                 else:
-                    _print(nodes[ rack ][ node ][ 'state_char' ], end=' ')
+                    print(nodes[ rack ][ node ][ 'state_char' ], end=' ')
             except KeyError:
-                _print(' ', end=' ')
-        _print()
-    _print()
+                print(' ', end=' ')
+        print()
+    print()
 
 def print_table_summary():
     global PBS_STATES
@@ -509,7 +481,7 @@ def print_table_summary():
         else:
             p = PBSQuery( OPT_SERVERNAME )
     except PBSError, reason:
-        _print('error: %s' % reason)
+        print('error: %s' % reason)
         sys.exit(-1)
 
     # get the state of the nodes
@@ -517,7 +489,7 @@ def print_table_summary():
     try:
         nodes = p.getnodes(attr)
     except PBSError, reason:
-        _print('error: %s' % reason)
+        print('error: %s' % reason)
         sys.exit(-1)
 
     node_dict = {}
@@ -541,7 +513,7 @@ def print_table_summary():
 
         if node.is_free():                          # can happen for single CPU jobs
             if node.has_job():
-#               _print('TD: %s' % nodename, node)
+#               print('TD: %s' % nodename, node)
                 state_char = PBS_STATES[pbs_ND_single]
                 count_states[pbs.ND_free] -=  1
                 count_states[pbs_ND_single] += 1
@@ -565,18 +537,18 @@ def print_table_summary():
 
     n = 0
     for state in legend:
-        _print('  %s  %-13s : %-5d' % (PBS_STATES[state], state, count_states[state]), end=' ')
+        print('  %s  %-13s : %-5d' % (PBS_STATES[state], state, count_states[state]), end=' ')
 
         n = n + 1
         if not (n & 1):
-            _print()
+            print()
  
     if TERMINAL_COLOR:
-        _print()
-        _print('Colors has been enabled for your terminal:')
-        _print(' - ' + color.YELLOW + 'Matched jobs' + color.END)
-        _print(' - ' + color.BLUE + 'Matched properties' + color.END)
-        _print(' - ' + color.GREEN + 'Matched jobs and properties' + color.END)
+        print()
+        print('Colors has been enabled for your terminal:')
+        print(' - ' + color.YELLOW + 'Matched jobs' + color.END)
+        print(' - ' + color.BLUE + 'Matched properties' + color.END)
+        print(' - ' + color.GREEN + 'Matched jobs and properties' + color.END)
 
 def print_extended(hosts=None, properties=None, jobs=None):
     global LENGTH_NODE
@@ -605,11 +577,11 @@ def print_extended(hosts=None, properties=None, jobs=None):
 
         rows_str.append( row_str )
 
-    _print()
-    _print(row_header)
-    _print(EXTENDED_PATTERNS[ 'line' ] % ( EXTENDED_PATTERNS[ 'line_char' ] * LENGTH_ROW ))
-    _print('\n'.join( rows_str ))
-    _print()
+    print()
+    print(row_header)
+    print(EXTENDED_PATTERNS[ 'line' ] % ( EXTENDED_PATTERNS[ 'line_char' ] * LENGTH_ROW ))
+    print('\n'.join( rows_str ))
+    print()
 
 if __name__ == '__main__':
     
@@ -660,7 +632,7 @@ if __name__ == '__main__':
     elif args.table:
         print_table(args.properties, args.jobs)
     else:
-        _print('Something is wrong, bye!', file=sys.stderr)
+        print('Something is wrong, bye!', file=sys.stderr)
         sys.exit( -1 )
 
     if args.summary:
