@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!@PYTHON@
 #
 # Author: Bas van der Vlies <basv@sara.nl>
 # Date  : 17 Aug 2001 
 # Desc. : Simple pbsnodes -a
 #
 # CVS info:
-# $Id$
+# $Id: pbsnodes-a.py 361 2018-04-12 11:27:11Z martijk $
 #
 #
 #

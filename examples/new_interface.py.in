@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!@PYTHON@
 #
 # Author: Bas van der Vlies <basv@sara.nl>
 # Date  : 02 March 2005
 # Desc. : Usage of the new PBSQuery module
 #
 # SVN info:
-# $Id$
+# $Id: new_interface.py 361 2018-04-12 11:27:11Z martijk $
 #
 #
 #

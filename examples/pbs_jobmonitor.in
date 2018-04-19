@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!@PYTHON@
 # 
 # Author:
 #  Willem Vermin, SARA, April 2012
 #
 # SVN Info:
 #   $Id#
-#   $URL$
+#   $URL: https://oss.trac.surfsara.nl/pbs_python/svn/trunk/examples/pbs_jobmonitor $
 #
 # pbs_jobmonitor, pbs_joblogin <jobnr> [nodenr]
 #    jobnr: the number of the job

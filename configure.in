@@ -41,4 +41,19 @@ AC_OUTPUT(
     Makefile
     Makefile.rpm
 	setup.py
+    examples/ha_server.py
+    examples/JobParser.py
+    examples/logpbs.py
+    examples/new_interface.py
+    examples/new_rack_pbsmon.py
+    examples/node_event_parse.py
+    examples/pbs_joblogin
+    examples/pbs_jobmonitor
+    examples/pbsmon.py
+    examples/pbsnodes-a.py
+    examples/pbs_version.py
+    examples/rack_pbsmon.py
+    examples/resmom_info.py
+    examples/sara_nodes.py
+    examples/set_property.py
 )

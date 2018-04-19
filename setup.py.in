@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!@PYTHON@
 #
 # $Id: setup.py 434 2005-11-04 15:02:07Z bas $
 #
