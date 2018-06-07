@@ -1,3 +1,10 @@
+pbs-python (4.6.5-1) UNRELEASED; urgency=low
+
+  [ Martijn Kruiten ]
+  * fix incorrect rendering when no tickets are specified
+
+ -- Martijn Kruiten <martijn.kruiten@surfsara.nl>  Thu, 07 Jun 2018 16:53:00 +0200
+
 pbs-python (4.6.4-1) UNRELEASED; urgency=medium
 
   [ Martijn Kruiten ]

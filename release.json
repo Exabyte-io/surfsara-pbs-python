@@ -1,7 +1,7 @@
 {
-  "version": "4.6.4",
-  "changes": "Use system Python instead of environment Python",
+  "version": "4.6.5",
+  "changes": "fixed incorrect rendering when no tickets are specified",
   "state": "stable",
   "scope": "bug fixes",
-  "download": "ftp://ftp.surfsara.nl/pub/outgoing/pbs_python-4.6.4.tar.gz"
+  "download": "ftp://ftp.surfsara.nl/pub/outgoing/pbs_python-4.6.5.tar.gz"
 }
