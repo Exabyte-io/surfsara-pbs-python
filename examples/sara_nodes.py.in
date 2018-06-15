@@ -322,8 +322,10 @@ def print_overview_normal(hosts=None):
             show_line_fields.append([w_date_add,line['date_add']])
             show_line_fields.append([w_date_edit,line['date_edit']])
             show_line_fields.append([w_username,line['username']])
-            if w_ticket > 0 and line['ticket'].strip():
+            if line['ticket'].strip():
                 show_line_fields.append([w_ticket,'#' + line['ticket']])
+            elif w_ticket > 0:
+                show_line_fields.append([w_ticket,''])
             show_line_fields.append([w_note,line['note']])
 
         print(' %s' % ' | '.join(print_create_list(show_line_fields)))
