@@ -1,3 +1,8 @@
+=========== 4.6.6
+ * PBSQuery do not parse simple values. else rendering of offline not
+   goes wrong.
+   Author: Bas van der Vlies
+
 =========== 4.6.4
  * Use system Python instead of environment Python.
    Author: Martijn Kruiten

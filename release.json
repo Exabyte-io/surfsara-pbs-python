@@ -1,7 +1,7 @@
 {
-  "version": "4.6.5",
-  "changes": "fixed incorrect rendering when no tickets are specified",
+  "version": "4.6.6",
+  "changes": "PBSQuery do not parse simple values, offline note is now rendered properly",
   "state": "stable",
   "scope": "bug fixes",
-  "download": "ftp://ftp.surfsara.nl/pub/outgoing/pbs_python-4.6.5.tar.gz"
+  "download": "ftp://ftp.surfsara.nl/pub/outgoing/pbs_python-4.6.6.tar.gz"
 }

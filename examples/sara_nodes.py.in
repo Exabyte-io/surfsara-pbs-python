@@ -241,6 +241,10 @@ def print_process_dict(dictin):
             else:
                 add_dict['date'] = None
 
+        elif len(note) == 1:
+            ## There is a note but not set by admin
+            add_dict['date'] = add_dict['date_add'] = add_dict['date_edit'] = add_dict['username'] = add_dict['ticket'] = ''
+            add_dict['note'] = ",".join(note)
         else:
             ## If there is no note, just set the variables with a empty string
             add_dict['date'] = add_dict['date_add'] = add_dict['date_edit'] = add_dict['username'] = add_dict['ticket'] = add_dict['note'] = ''
@@ -307,6 +311,7 @@ def print_overview_normal(hosts=None):
                 if w_ticket < 6:
                     w_ticket = 6
                 show_fields.append([w_ticket,'Ticket'])
+        if w_date > 0 or w_note > 0:
             show_fields.append([w_note,'Note'])
 
         print(' %s' % ' | '.join(print_create_list(show_fields)))
@@ -326,6 +331,7 @@ def print_overview_normal(hosts=None):
                 show_line_fields.append([w_ticket,'#' + line['ticket']])
             elif w_ticket > 0:
                 show_line_fields.append([w_ticket,''])
+        if w_date > 0 or w_note > 0:
             show_line_fields.append([w_note,line['note']])
 
         print(' %s' % ' | '.join(print_create_list(show_line_fields)))

@@ -1,3 +1,9 @@
+pbs-python (4.6.6-1) UNRELEASED; urgency=medium
+
+  * Fixed a problem that "offline" notes were not displayed correctly 
+
+ -- Bas van der Vlies <bas.vandervlies@surfsara.nl>  Mon, 22 Oct 2018 10:59:55 +0200
+
 pbs-python (4.6.5-1) UNRELEASED; urgency=low
 
   [ Martijn Kruiten ]
