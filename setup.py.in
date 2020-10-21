@@ -5,6 +5,8 @@
 # set ts=4
 #
 
+from __future__ import print_function
+
 import sys
 import os
 import glob
@@ -18,8 +20,8 @@ PBS_LIB_COMPILE_LINE='@pbs_library_compile_line@'
 PBS_LIB_DIR='@pbs_library_dir@'
 
 if not PBS_LIB_DIR:
-    print 'Please specify where the PBS libraries are!!'
-    print 'edit setup.py and fill in the PBS_LIB_DIR variable'
+    print('Please specify where the PBS libraries are!!')
+    print('edit setup.py and fill in the PBS_LIB_DIR variable')
     sys.exit(1)
 
 LIBS = ['torque']
@@ -41,7 +43,7 @@ if LooseVersion(VERSION) >= LooseVersion('5.0'):
     os.environ['CFLAGS']=' '.join(os.environ.get('CFLAGS','').split(' ')+['-I%s'%inc]) 
     
     if not os.path.exists(os.path.join(inc,'log.h')):
-        print 'Failed to find log.h in include dir %s. (Set include dir via PBS_PYTHON_INCLUDEDIR variable)'%inc
+        print('Failed to find log.h in include dir %s. (Set include dir via PBS_PYTHON_INCLUDEDIR variable)'%inc)
         sys.exit(2)
   
     for fn in glob.glob('*.h'):
@@ -59,7 +61,7 @@ elif LooseVersion(VERSION) >= LooseVersion('4.2'):
     os.environ['CFLAGS']=' '.join(os.environ.get('CFLAGS','').split(' ')+['-I%s'%inc]) 
     
     if not os.path.exists(os.path.join(inc,'log.h')):
-        print 'Failed to find log.h in include dir %s. (Set include dir via PBS_PYTHON_INCLUDEDIR variable)'%inc
+        print('Failed to find log.h in include dir %s. (Set include dir via PBS_PYTHON_INCLUDEDIR variable)'%inc)
         sys.exit(2)
   
     for fn in glob.glob('*.h'):
@@ -79,7 +81,7 @@ elif LooseVersion(VERSION) >= LooseVersion('2.4'):
 
 else:
 
-    print "Version: %s is not supported" %(VERSION)
+    print("Version: %s is not supported" %(VERSION))
     sys.exit(1)
 
 
