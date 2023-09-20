@@ -202,11 +202,11 @@ for j in jobs.keys():
 
 
 
-print 'total_jobs :', total_jobs 
-print 'serial_jobs :', serial_jobs
-print 'parallel_jobs :', parallel_jobs
-print 'express_jobs :', express_jobs
-print 'serial_jobs_on_parallel_node :', serial_jobs_on_parallel_node
+print('total_jobs :', total_jobs)
+print('serial_jobs :', serial_jobs)
+print('parallel_jobs :', parallel_jobs)
+print('express_jobs :', express_jobs)
+print('serial_jobs_on_parallel_node :', serial_jobs_on_parallel_node)
 
 for p in parallel_job_len:
-    print p, parallel_job_len[p]
+    print(p, parallel_job_len[p])
