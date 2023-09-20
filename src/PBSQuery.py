@@ -59,7 +59,7 @@ you are interested in, eg: only show state of nodes
     nodes = p.getnodes(l)
 """
 import pbs
-import UserDict
+from collections import UserDict
 import string
 import sys
 import re
@@ -403,12 +403,12 @@ class PBSQuery:
         """
         self.OLD_DATA_STRUCTURE = True
 
-class _PBSobject(UserDict.UserDict):
+class _PBSobject(UserDict):
     TRUE  = 1
     FALSE = 0
 
     def __init__(self, dictin = None):
-        UserDict.UserDict.__init__(self)
+        UserDict.__init__(self)
         self.name = None
 
         if dictin:
